@@ -1,3 +1,7 @@
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Icon=icon.ico
+#AutoIt3Wrapper_Res_Fileversion=1.1.0.0
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #include <Array.au3>
 #include <MsgBoxConstants.au3>
 #include <File.au3>
@@ -18,9 +22,13 @@ EndFunc
 
 Global $ytdl_path = (@ScriptDir & "\youtube-dl.exe")
 
-Global $argsmp3 = (' --extract-audio --format=bestaudio/best --audio-format mp3 --audio-quality=320k --output "%(title)s.%(ext)s"')
+Global $argsmp3 = (' --extract-audio --format=bestaudio --audio-format mp3 --audio-quality=320k --output "%(title)s.%(ext)s"')
 
-Global $argsmp4 = (' -f bestvideo[ext=mp4] --output "%(title)s.%(ext)s"')
+Global $argsmp3channel = (' --extract-audio --format=bestaudio --audio-format mp3 --audio-quality=320k --output "%(uploader)s - %(title)s.%(ext)s"')
+
+Global $argsmp4 = (' -f bestvideo[ext=mp4]+bestaudio --output "%(title)s.%(ext)s"')
+
+Global $argsmp4channel = (' -f bestvideo[ext=mp4]+bestaudio --output "%(title)s.%(ext)s"')
 
 Global $empty = ""
 
@@ -49,6 +57,7 @@ Func YoutubeDL()
    Global $video_url = GUICtrlCreateInput("", 10, 70, 350, 20)
    Global $idConvertMP3 = GUICtrlCreateButton("Convert to MP3", 10, 100, 85, 25)
    Global $idConvertMP4 = GUICtrlCreateButton("Convert to MP4", 10, 140, 85, 25)
+   Local  $idCheckbox = GUICtrlCreateCheckbox("Include Uploader", 10, 170, 185, 25)
    Global $idUpdate = GUICtrlCreateButton("Update YT-DL", 250, 100, 85, 25)
    Global $Label1 = GUICtrlCreateLabel("Download not working? Try Updating YT-DL", 230, 140, 130, 50)
    GUICtrlSetFont(-1, 9, 0, 0, "Arial")
@@ -73,6 +82,8 @@ Func YoutubeDL()
 
 						   If $link = $empty Then
 							  MsgBox(0, "Error", "Please insert a Link")
+						   ElseIf _IsChecked($idCheckbox) Then
+							  ConvertMP3Channel()
 						   Else
 						   ConvertMP3()
 						   EndIf
@@ -83,6 +94,8 @@ Func YoutubeDL()
 
 						   If $link = $empty Then
 							  MsgBox(0, "Error", "Please insert a Link")
+						   ElseIf _IsChecked($idCheckbox) Then
+							  ConvertMP4Channel()
 						   Else
 							  ConvertMP4()
 						   EndIf
@@ -97,14 +110,18 @@ Func YoutubeDL()
 						MsgBox(0,"Word of Advice", "When Downloading an MP3 on Youtube, always use Topic Channels when available because those are the Uploads from the Distributor, which is always in the highest Quality")
 
 					 Case $idVersitem
-						MsgBox(0,"Version", "This is Version 1.0. Stay tuned for Updates on https://github.com/thechantaro/Youtube-DL-GUI")
+						If MsgBox(4,"Version", "This is Version 1.1. Would you like to check for Updates?") = 6 Then
+							ShellExecute(@ScriptDir & "\update.exe")
+						Else
+						EndIf
+
 
         EndSwitch
     WEnd
 
     ; Delete the previous GUI and all controls.
     GUIDelete($hGUI)
-EndFunc   ;==>Example
+EndFunc
 #EndRegion
 
 ;Run Conversion
@@ -112,10 +129,24 @@ Func ConvertMP3()
 	Run($ytdl_path & " " & $link & $argsmp3)
 EndFunc
 
+Func ConvertMP3Channel()
+	Run($ytdl_path & " " & $link & $argsmp3channel)
+EndFunc
+
 Func ConvertMP4()
 	Run($ytdl_path & " " & $link & $argsmp4)
 EndFunc
 
+Func ConvertMP4Channel()
+	Run($ytdl_path & " " & $link & $argsmp4channel)
+EndFunc
+
+;Other Functions
+
 Func UpdateYTDL()
    Run($ytdl_path & " -U")
 EndFunc
+
+Func _IsChecked($idControlID)
+    Return BitAND(GUICtrlRead($idControlID), $GUI_CHECKED) = $GUI_CHECKED
+EndFunc   ;==>_IsChecked
