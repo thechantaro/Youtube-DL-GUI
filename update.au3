@@ -29,7 +29,6 @@ Global $Download
 Global $updateFailed
 Global $retryornot
 
-
 ; ---- These are the two main functions to run
 GetCurrentSoftwareVersion()
 CheckVersion()
