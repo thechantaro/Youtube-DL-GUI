@@ -23,7 +23,7 @@ EndFunc
 ;Global Vars
 
 Global $serverVersionFile = "https://raw.githubusercontent.com/thechantaro/Youtube-DL-GUI/main/version.txt";txt file with version number
-Global $UpdatePath = @ScriptDir & "\YoutubeDL-GUI.exe"; This is the local path where you want your update to be downloaded into.
+Global $UpdatePath = @ScriptDir & "\New YoutubeDL-GUI.exe"; This is the local path where you want your update to be downloaded into.
 Global $ToBeReplacedPath = @ScriptDir & "\YoutubeDL-GUI.exe"; This is the path to your original program that you want to update.
 Global $Download
 Global $updateFailed
@@ -31,6 +31,7 @@ Global $retryornot
 
 ; ---- These are the two main functions to run
 GetCurrentSoftwareVersion()
+Global $serverUpdateExe = "https://github.com/thechantaro/Youtube-DL-GUI/releases/download/v" & $remoteEXEVersion &"/YoutubeDL-GUI.exe" ; This is the path to the update.exe file on your server.
 CheckVersion()
 ;----
 
@@ -41,7 +42,6 @@ Func GetCurrentSoftwareVersion()
 
 EndFunc   ;==>GetCurrentSoftwareVersion
 
-Global $serverUpdateExe = "https://github.com/thechantaro/Youtube-DL-GUI/releases/download/v" & $remoteEXEVersion &"/YoutubeDL-GUI.exe" ; This is the path to the update.exe file on your server.
 
 Func CheckVersion()
 ;check if local version is lower than server version - if server version higher than local version then push update

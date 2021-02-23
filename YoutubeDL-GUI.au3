@@ -112,6 +112,7 @@ Func YoutubeDL()
 					 Case $idVersitem
 						If MsgBox(4,"Version", "This is Version 1.1. Would you like to check for Updates?") = 6 Then
 							ShellExecute(@ScriptDir & "\update.exe")
+							Exit
 						Else
 						EndIf
 
